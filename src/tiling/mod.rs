@@ -3,3 +3,4 @@ pub mod text;
 pub mod tiles;
 pub mod traits;
 mod opts;
+mod progressbar;

@@ -55,12 +55,15 @@ impl Ptui {
         ptui.accents = (fg,bg);
 
         Ptui::init_signal();
+
         let _th = thread::spawn(move || {
             while RUNNING.load(Relaxed) {
                 Ptui::render();
                 thread::sleep(Duration::from_millis(refresh_ms));
             }
         });
+        // Allow everything to start properly before returning
+        thread::sleep(Duration::from_secs(1));
     }
     pub fn get_bg() -> Color {
         ptui().lock().unwrap().accents.1.clone()
