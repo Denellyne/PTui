@@ -93,7 +93,7 @@ impl ProgressBarTile {
         let (ch, fade, ldelim, rdelim) = self.ui;
 
         if progress_bar_percent != 100 {
-            let fade_str: String = if resolution - progress_bar_percent - 1 > 0 {
+            let fade_str: String = if resolution.saturating_sub( progress_bar_percent).saturating_sub(  1) > 0 {
                 format!(
                     "{fade}{}",
                     " ".repeat(resolution - progress_bar_percent - 1)
