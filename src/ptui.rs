@@ -1,4 +1,4 @@
-use crate::modifiers::{BackgroundModifier, ForegroundModifier, TextModifier};
+use crate::modifiers::{Color, TextModifier};
 use crate::os_impl::TerminalManagerImpl;
 use crate::tiling::pane::Pane;
 use crate::tiling::tiles::Tile;
@@ -18,8 +18,7 @@ pub(crate) static RUNNING: AtomicBool = AtomicBool::new(true);
 pub struct Ptui {
     errors: Vec<String>,
     pane: &'static Mutex<Pane>,
-    bg: BackgroundModifier,
-    accents: ForegroundModifier,
+    accents : (Color, Color),
     dimensions: (u16, u16),
 }
 
@@ -29,15 +28,22 @@ fn ptui() -> &'static Mutex<Ptui> {
         Mutex::new(Ptui {
             errors: vec![],
             pane: &PANE,
-            bg: BackgroundModifier::Black,
-            accents: ForegroundModifier::White,
+            accents: (Color::White, Color::Black),
             dimensions: (0, 0),
         })
     })
 }
 
 impl Ptui {
-    pub fn init(title: String, bg: BackgroundModifier, fg: ForegroundModifier, refresh_ms: u64) {
+    pub fn init(
+        title: String,
+        bg: Option<Color>,
+        fg: Option<Color>,
+        refresh_ms: u64,
+    ) {
+        let bg = bg.unwrap_or(Color::Black);
+        let fg = fg.unwrap_or(Color::White);
+
         // Enter alternate screen and hide cursor
         print!("\x1B[?1049h\x1B[?25l");
         print!("{}", TextModifier::get_background_modifier(&bg));
@@ -46,8 +52,7 @@ impl Ptui {
         let mut ptui = ptui().lock().unwrap();
         let title = Self::color_string(&title, &fg);
         ptui.pane.lock().unwrap().set_title(title);
-        ptui.bg = bg;
-        ptui.accents = fg;
+        ptui.accents = (fg,bg);
 
         Ptui::init_signal();
         let _th = thread::spawn(move || {
@@ -57,11 +62,11 @@ impl Ptui {
             }
         });
     }
-    pub fn get_bg() -> BackgroundModifier {
-        ptui().lock().unwrap().bg.clone()
+    pub fn get_bg() -> Color {
+        ptui().lock().unwrap().accents.1.clone()
     }
-    pub fn get_accents() -> ForegroundModifier {
-        ptui().lock().unwrap().accents.clone()
+    pub fn get_accents() -> Color {
+        ptui().lock().unwrap().accents.0.clone()
     }
 
     pub fn get_pane() -> &'static Mutex<Pane> {

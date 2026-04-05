@@ -78,9 +78,12 @@ impl ProgressBarTile {
             let accented_str = Ptui::color_string("Progress:", &Ptui::get_accents());
             let length = accented_str.len();
             let accented_str = Line::convert_static(accented_str);
-            let plain_str = vec![Line::Plain(format!(" objects of {}",total))];
+            let plain_str = vec![Line::Plain(format!(" objects of {}", total))];
 
-            Some((TextTile::from_dynamic((accented_str,plain_str), current, Ordering::SeqCst), length))
+            Some((
+                TextTile::from_dynamic((accented_str, plain_str), current, Ordering::SeqCst),
+                length,
+            ))
         } else {
             None
         }
@@ -146,5 +149,26 @@ impl Printable for Tile {
             Tile::Pane(pane) => pane.print(pos, dimensions),
             Tile::Temporary(temporary) => temporary.print(pos, dimensions),
         }
+    }
+}
+
+impl From<TextTile> for Tile {
+    fn from(line: TextTile) -> Tile {
+        Tile::Line(line)
+    }
+}
+impl From<ProgressBarTile> for Tile {
+    fn from(bar: ProgressBarTile) -> Tile {
+        Tile::ProgressBar(bar)
+    }
+}
+impl From<Pane> for Tile {
+    fn from(pane: Pane) -> Tile {
+        Tile::Pane(pane)
+    }
+}
+impl From<TemporaryTile> for Tile {
+    fn from(temp: TemporaryTile) -> Tile {
+        Tile::Temporary(temp)
     }
 }
