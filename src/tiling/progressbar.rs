@@ -78,7 +78,7 @@ impl ProgressBarTile {
     fn progress_bar(&mut self, pos: (u32, u32), dimensions: (usize, usize)) -> u32 {
         let text = &mut self.text.as_mut().unwrap().0;
 
-        let row = text.print(pos, dimensions) + 1;
+        let row = text.print(pos, dimensions) + 2;
         self.progress_bar_simple((row, pos.1), dimensions)
     }
 
