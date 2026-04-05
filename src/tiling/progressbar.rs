@@ -102,7 +102,7 @@ impl ProgressBarTile {
                 fade.to_string()
             };
             print!(
-                "{ldelim}{fade_str}{}{rdelim} {}%",
+                "{ldelim}{}{fade_str}{rdelim} {}%",
                 ch.to_string().repeat(progress_bar_percent),
                 progress_bar_percent * 100 / resolution
             );
