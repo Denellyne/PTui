@@ -1,5 +1,13 @@
 [package]
 name = "ptui"
+description = "A Terminal User Interface for Rust"
+authors = ["Gustavo dos Santos"]
+repository = "https://github.com/Denellyne/PTui"
+license = "MIT"
+license-file = "LICENSE"
+keywords = ["TUI"]
+categories = ["command-line-utilities"]
+readme = "README.md"
 version = "0.1.0"
 edition = "2024"
 
