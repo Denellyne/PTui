@@ -106,7 +106,7 @@ impl ProgressBarTile {
                 ch.to_string().repeat(progress_bar_percent),
                 progress_bar_percent * 100 / resolution
             );
-            return pos.0+1;
+            return pos.0;
         }
 
         print!(
